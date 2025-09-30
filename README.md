@@ -2,6 +2,9 @@
 
 An intelligent platform for analyzing Detailed Project Reports (DPRs) using AI/ML technologies to assess completeness, compliance, and predict risks for the Ministry of Development of North Eastern Region (MDoNER).
 
+<img width="1122" height="704" alt="image" src="https://github.com/user-attachments/assets/cd4eb876-084f-41ba-91ea-7250029299b5" />
+
+
 ## Features
 
 - **Multi-format Document Ingestion**: PDF, Word, and scanned image support
