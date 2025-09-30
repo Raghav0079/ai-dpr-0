@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # Main AI DPR Application
+  ai-dpr-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-dpr-system
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - .env.production
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    depends_on:
+      - redis
+    networks:
+      - ai-dpr-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for Caching and Session Storage
+  redis:
+    image: redis:7-alpine
+    container_name: ai-dpr-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-dpr-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-your-redis-password}
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ai-dpr-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - ai-dpr-app
+    networks:
+      - ai-dpr-network
+    profiles:
+      - proxy
+
+  # PostgreSQL Database (Alternative to Supabase)
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-dpr-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME:-ai_dpr_db}
+      - POSTGRES_USER=${DB_USER:-ai_dpr_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-your-secure-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - ai-dpr-network
+    profiles:
+      - local-db
+
+networks:
+  ai-dpr-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
