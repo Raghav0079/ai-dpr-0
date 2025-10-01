@@ -48,3 +48,4 @@ echo 📊 Dashboard: http://localhost:5173
 echo.
 echo Close the command windows to stop the servers
 pause
+

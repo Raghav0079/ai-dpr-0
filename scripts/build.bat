@@ -48,3 +48,4 @@ if not exist logs mkdir logs
 echo ✅ Build completed successfully!
 echo 📁 React build files are in: react-frontend\dist
 echo 🚀 You can now start the server with: npm start
+

@@ -35,3 +35,4 @@ REM Start the server
 echo 🌐 Starting server...
 set NODE_ENV=production
 npm start
+

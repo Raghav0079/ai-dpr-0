@@ -39,3 +39,4 @@ chmod 755 logs
 # Start the server
 echo "🌐 Starting server..."
 NODE_ENV=production npm start
+
