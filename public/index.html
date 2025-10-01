@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AI DPR - Intelligent Project Risk Analysis</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1173d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        display: ["Inter"],
+                    },
+                    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+                },
+            },
+        };
+    </script>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-xl">
+            <div class="flex items-center gap-4">
+                <div class="loading-spinner"></div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Initializing AI DPR System</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Loading project data and AI models...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        <div class="flex h-full grow flex-col">
+            <!-- Header -->
+            <header class="flex items-center justify-between whitespace-nowrap border-b border-black/10 dark:border-white/10 px-10 py-3">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-3 text-gray-800 dark:text-white">
+                        <div class="size-6 text-primary">
+                            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.263 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="currentColor"></path>
+                                <path clip-rule="evenodd" d="M10.4485 13.8519C10.4749 13.9271 10.6203 14.246 11.379 14.7361C12.298 15.3298 13.7492 15.9145 15.6717 16.3735C18.0007 16.9296 20.8712 17.2655 24 17.2655C27.1288 17.2655 29.9993 16.9296 32.3283 16.3735C34.2508 15.9145 35.702 15.3298 36.621 14.7361C37.3796 14.246 37.5251 13.9271 37.5515 13.8519C37.5287 13.7876 37.4333 13.5973 37.0635 13.2931C36.5266 12.8516 35.6288 12.3647 34.343 11.9175C31.79 11.0295 28.1333 10.4437 24 10.4437C19.8667 10.4437 16.2099 11.0295 13.657 11.9175C12.3712 12.3647 11.4734 12.8516 10.9365 13.2931C10.5667 13.5973 10.4713 13.7876 10.4485 13.8519ZM37.5563 18.7877C36.3176 19.3925 34.8502 19.8839 33.2571 20.2642C30.5836 20.9025 27.3973 21.2655 24 21.2655C20.6027 21.2655 17.4164 20.9025 14.7429 20.2642C13.1498 19.8839 11.6824 19.3925 10.4436 18.7877V34.1275C10.4515 34.1545 10.5427 34.4867 11.379 35.027C12.298 35.6207 13.7492 36.2054 15.6717 36.6644C18.0007 37.2205 20.8712 37.5564 24 37.5564C27.1288 37.5564 29.9993 37.2205 32.3283 36.6644C34.2508 36.2054 35.702 35.6207 36.621 35.027C37.4573 34.4867 37.5485 34.1546 37.5563 34.1275V18.7877ZM41.5563 13.8546V34.1455C41.5563 36.1078 40.158 37.5042 38.7915 38.3869C37.3498 39.3182 35.4192 40.0389 33.2571 40.5551C30.5836 41.1934 27.3973 41.5564 24 41.5564C20.6027 41.5564 17.4164 41.1934 14.7429 40.5551C12.5808 40.0389 10.6502 39.3182 9.20848 38.3869C7.84205 37.5042 6.44365 36.1078 6.44365 34.1455L6.44365 13.8546C6.44365 12.2684 7.37223 11.0454 8.39581 10.2036C9.43325 9.3505 10.8137 8.67141 12.343 8.13948C15.4203 7.06909 19.5418 6.44366 24 6.44366C28.4582 6.44366 32.5797 7.06909 35.657 8.13948C37.1863 8.67141 38.5667 9.3505 39.6042 10.2036C40.6278 11.0454 41.5563 12.2684 41.5563 13.8546Z" fill="currentColor" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold">AI DPR System</h2>
+                    </div>
+                    <nav class="flex items-center gap-8">
+                        <a class="nav-link text-sm font-medium text-primary" href="#" data-page="dashboard">Dashboard</a>
+                        <a class="nav-link text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary" href="#" data-page="reports">Reports</a>
+                        <a class="nav-link text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary" href="#" data-page="analytics">Analytics</a>
+                        <a class="nav-link text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary" href="#" data-page="ai-analysis">AI Analysis</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative w-64">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg aria-hidden="true" class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <input id="globalSearch" class="h-10 w-full rounded-lg border-0 bg-white/5 dark:bg-black/20 pl-10 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="Search reports, projects..." type="text"/>
+                    </div>
+                    <button id="themeToggle" class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 dark:bg-black/20 hover:bg-white/10 dark:hover:bg-black/30">
+                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </button>
+                    <button id="notificationBtn" class="relative flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 dark:bg-black/20 hover:bg-white/10 dark:hover:bg-black/30">
+                        <svg class="text-gray-600 dark:text-gray-300" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
+                        </svg>
+                        <span id="notificationDot" class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full notification-dot"></span>
+                    </button>
+                    <div class="size-10 rounded-full bg-cover bg-center cursor-pointer" id="userProfile" style='background-image: url("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face");'></div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex flex-1 justify-center py-8 px-4 sm:px-6 lg:px-8">
+                <div class="w-full max-w-7xl">
+                    <!-- Dashboard Page -->
+                    <div id="dashboardPage" class="page-content">
+                        <div class="border-b border-black/10 dark:border-white/10 px-4">
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+                                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">AI-Powered Risk Dashboard</h1>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button id="refreshDashboard" class="flex items-center gap-2 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20 dark:hover:bg-primary/30 transition-all">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        Refresh
+                                    </button>
+                                    <button id="exportReport" class="flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analytics Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Reports</p>
+                                        <p id="totalReports" class="text-2xl font-bold text-gray-900 dark:text-white">--</p>
+                                    </div>
+                                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                                        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Open Issues</p>
+                                        <p id="openReports" class="text-2xl font-bold text-gray-900 dark:text-white">--</p>
+                                    </div>
+                                    <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                                        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">High Priority</p>
+                                        <p id="highSeverity" class="text-2xl font-bold text-gray-900 dark:text-white">--</p>
+                                    </div>
+                                    <div class="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                                        <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">This Week</p>
+                                        <p id="recentReports" class="text-2xl font-bold text-gray-900 dark:text-white">--</p>
+                                    </div>
+                                    <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                                        <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 px-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Issue Distribution</h3>
+                                <canvas id="issueChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-black/10 dark:border-white/10">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Risk Trends</h3>
+                                <canvas id="trendsChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="mt-6 px-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="p-6 border-b border-black/10 dark:border-white/10">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+                                </div>
+                                <div id="recentActivity" class="divide-y divide-black/10 dark:divide-white/10">
+                                    <!-- Activity items will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Page -->
+                    <div id="reportsPage" class="page-content hidden">
+                        <div class="border-b border-black/10 dark:border-white/10 px-4">
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+                                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Project Reports</h1>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button id="newAnalysisBtn" class="flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M12 6v12m6-6H6" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                        New Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filters -->
+                        <div class="mt-4 flex flex-wrap gap-3 px-4">
+                            <button class="filter-btn rounded-lg bg-primary/10 dark:bg-primary/20 px-4 py-1.5 text-sm font-medium text-primary hover:bg-primary/20 dark:hover:bg-primary/30 transition-all" data-filter="all">All Issues</button>
+                            <button class="filter-btn rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-all" data-filter="Budget Mismatch">Budget Mismatch</button>
+                            <button class="filter-btn rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-all" data-filter="Unrealistic Schedule">Unrealistic Schedule</button>
+                            <button class="filter-btn rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-all" data-filter="Resource Allocation">Resource Allocation</button>
+                        </div>
+
+                        <!-- Reports Table -->
+                        <div class="mt-6 px-4">
+                            <div class="overflow-hidden rounded-lg border border-black/10 dark:border-white/10">
+                                <table class="min-w-full divide-y divide-black/10 dark:divide-white/10">
+                                    <thead class="bg-gray-50 dark:bg-white/5">
+                                        <tr>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Report ID</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Project</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Issue Type</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Description</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Severity</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Status</th>
+                                            <th class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white" scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportsTableBody" class="divide-y divide-black/10 dark:divide-white/10 bg-background-light dark:bg-background-dark">
+                                        <!-- Reports will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div id="pagination" class="mt-6 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">
+                                        Showing <span id="showingFrom">1</span> to <span id="showingTo">10</span> of <span id="totalRecords">0</span> results
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button id="prevPage" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50" disabled>Previous</button>
+                                    <div id="pageNumbers" class="flex items-center gap-1">
+                                        <!-- Page numbers will be populated by JavaScript -->
+                                    </div>
+                                    <button id="nextPage" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Page -->
+                    <div id="analyticsPage" class="page-content hidden">
+                        <div class="border-b border-black/10 dark:border-white/10 px-4">
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+                                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Advanced Analytics</h1>
+                            </div>
+                        </div>
+                        <div class="mt-6 px-4">
+                            <div class="text-center py-12">
+                                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Advanced Analytics</h3>
+                                <p class="text-gray-500 dark:text-gray-400">Detailed analytics features coming soon...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Analysis Page -->
+                    <div id="aiAnalysisPage" class="page-content hidden">
+                        <div class="border-b border-black/10 dark:border-white/10 px-4">
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+                                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">AI Analysis Engine</h1>
+                            </div>
+                        </div>
+                        <div class="mt-6 px-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-sm border border-black/10 dark:border-white/10">
+                                <div class="max-w-2xl mx-auto">
+                                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Analyze Project Risk</h2>
+                                    <form id="aiAnalysisForm" class="space-y-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Project Name</label>
+                                            <input type="text" id="aiProjectName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50" placeholder="Enter project name" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Analysis Type</label>
+                                            <select id="aiAnalysisType" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50" required>
+                                                <option value="">Select analysis type</option>
+                                                <option value="Budget Mismatch">Budget Analysis</option>
+                                                <option value="Unrealistic Schedule">Schedule Analysis</option>
+                                                <option value="Resource Allocation">Resource Analysis</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                                            <textarea id="aiDescription" rows="4" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50" placeholder="Describe the project context and specific concerns..." required></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Additional Context (Optional)</label>
+                                            <textarea id="aiContext" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50" placeholder="Any additional information that might help the AI analysis..."></textarea>
+                                        </div>
+                                        <button type="submit" id="analyzeBtn" class="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                            </svg>
+                                            <span id="analyzeText">Analyze with AI</span>
+                                            <div id="analyzeSpinner" class="hidden loading-spinner"></div>
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- AI Results -->
+                                    <div id="aiResults" class="hidden mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                        <h3 class="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-4">AI Analysis Results</h3>
+                                        <div id="aiAnalysisContent">
+                                            <!-- Results will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="flex justify-center border-t border-black/10 dark:border-white/10">
+                <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <footer class="py-6 text-center">
+                        <div class="flex flex-wrap items-center justify-center gap-6 sm:justify-around">
+                            <a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white" href="#">Terms of Service</a>
+                            <a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white" href="#">Privacy Policy</a>
+                            <a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white" href="#">Contact Us</a>
+                        </div>
+                        <p class="mt-6 text-sm text-gray-500 dark:text-gray-400">© 2025 AI DPR System. All rights reserved.</p>
+                    </footer>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modals and overlays will be inserted here by JavaScript -->
+    
+    <script src="/js/api.js"></script>
+    <script src="/js/components.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/reports.js"></script>
+    <script src="/js/unified-nav.js"></script>
+</body>
+</html>

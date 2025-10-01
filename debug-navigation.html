@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AI DPR - Debug Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .page-content.hidden { display: none; }
+        .page-content { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div class="p-8">
+        <h1 class="text-2xl font-bold mb-6">AI DPR Navigation Test</h1>
+        
+        <!-- Navigation -->
+        <nav class="flex gap-4 mb-8">
+            <button class="nav-link px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" data-page="dashboard">Dashboard</button>
+            <button class="nav-link px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600" data-page="reports">Reports</button>
+            <button class="nav-link px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600" data-page="analytics">Analytics</button>
+            <button class="nav-link px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600" data-page="ai-analysis">AI Analysis</button>
+        </nav>
+
+        <!-- Pages -->
+        <div id="dashboardPage" class="page-content bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Dashboard Page</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded">
+                    <h3 class="font-medium">Total Reports</h3>
+                    <p class="text-2xl font-bold">24</p>
+                </div>
+                <div class="bg-red-100 dark:bg-red-900 p-4 rounded">
+                    <h3 class="font-medium">Open Issues</h3>
+                    <p class="text-2xl font-bold">8</p>
+                </div>
+                <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded">
+                    <h3 class="font-medium">High Priority</h3>
+                    <p class="text-2xl font-bold">3</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="reportsPage" class="page-content hidden bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Reports Page</h2>
+            <p>This is the reports management page.</p>
+        </div>
+
+        <div id="analyticsPage" class="page-content hidden bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Analytics Page</h2>
+            <p>This is the analytics page.</p>
+        </div>
+
+        <div id="aiAnalysisPage" class="page-content hidden bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">AI Analysis Page</h2>
+            <p>This is the AI analysis page.</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('Navigation test script loaded');
+        
+        // Simple navigation function
+        function showPage(pageName) {
+            console.log('Switching to page:', pageName);
+            
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.add('hidden');
+                console.log('Hiding page:', page.id);
+            });
+
+            // Show target page
+            const targetPage = document.getElementById(pageName + 'Page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                console.log('Showing page:', targetPage.id);
+            } else {
+                console.error('Page not found:', pageName + 'Page');
+            }
+
+            // Update navigation buttons
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.dataset.page === pageName) {
+                    link.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                    link.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                } else {
+                    link.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                    link.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                }
+            });
+        }
+
+        // Setup navigation event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up navigation');
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    console.log('Nav link clicked:', page);
+                    if (page) {
+                        showPage(page);
+                    }
+                });
+            });
+            
+            console.log('Navigation setup complete');
+        });
+    </script>
+</body>
+</html>
