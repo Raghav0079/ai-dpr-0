@@ -1,6 +1,6 @@
 # AI DPR System
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/ai-dpr-system)
+
 
 A comprehensive AI-powered Detailed Project Report (DPR) system for project management, risk analysis, and reporting.
 
