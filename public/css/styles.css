@@ -367,3 +367,60 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Chart containers */
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  min-height: 250px;
+  max-height: 400px;
+}
+
+@media (max-width: 640px) {
+  .chart-container {
+    height: 250px;
+    min-height: 200px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chart-container {
+    height: 320px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .chart-container {
+    height: 350px;
+  }
+}
+
+/* Chart responsiveness */
+.chart-container canvas {
+  display: block;
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Grid responsiveness for charts */
+@media (max-width: 1023px) {
+  .grid.grid-cols-1.lg\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Chart loading state */
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 0.5rem;
+}
+
+.dark .chart-loading {
+  background: rgba(255, 255, 255, 0.02);
+}

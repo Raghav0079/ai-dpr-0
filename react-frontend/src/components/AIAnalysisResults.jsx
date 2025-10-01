@@ -282,21 +282,61 @@ const AIAnalysisResults = ({ analysisData }) => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Issue Resolution Trends
               </h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analysis.trends}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="month" stroke="#6B7280" />
-                    <YAxis stroke="#6B7280" />
+              <div className="h-80 min-h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+                  <LineChart 
+                    data={analysis.trends}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" strokeOpacity={0.3} />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="#6B7280" 
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      stroke="#6B7280" 
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      width={50}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: '#1F2937', 
                         border: '1px solid #374151',
-                        borderRadius: '8px'
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                       }}
+                      labelStyle={{ color: '#F9FAFB' }}
+                      cursor={{ stroke: '#6B7280', strokeWidth: 1, strokeDasharray: '3 3' }}
                     />
-                    <Line type="monotone" dataKey="issues" stroke="#EF4444" strokeWidth={2} name="Issues Detected" />
-                    <Line type="monotone" dataKey="resolved" stroke="#10B981" strokeWidth={2} name="Issues Resolved" />
+                    <Line 
+                      type="monotone" 
+                      dataKey="issues" 
+                      stroke="#EF4444" 
+                      strokeWidth={3} 
+                      name="Issues Detected"
+                      dot={{ fill: '#EF4444', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: '#EF4444', strokeWidth: 2 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="resolved" 
+                      stroke="#10B981" 
+                      strokeWidth={3} 
+                      name="Issues Resolved"
+                      dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 2 }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

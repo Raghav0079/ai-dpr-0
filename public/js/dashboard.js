@@ -128,13 +128,32 @@ class Dashboard {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                aspectRatio: 1.5,
+                devicePixelRatio: window.devicePixelRatio || 1,
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            padding: 20,
+                            padding: 15,
+                            usePointStyle: true,
+                            font: {
+                                size: 12
+                            },
                             color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
                         }
+                    },
+                    tooltip: {
+                        backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                        titleColor: document.documentElement.classList.contains('dark') ? '#f9fafb' : '#111827',
+                        bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151',
+                        borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+                        borderWidth: 1
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10
                     }
                 }
             }
@@ -182,32 +201,70 @@ class Dashboard {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                aspectRatio: 2,
+                devicePixelRatio: window.devicePixelRatio || 1,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            padding: 20,
+                            padding: 15,
+                            usePointStyle: true,
+                            font: {
+                                size: 12
+                            },
                             color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
                         }
+                    },
+                    tooltip: {
+                        backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                        titleColor: document.documentElement.classList.contains('dark') ? '#f9fafb' : '#111827',
+                        bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151',
+                        borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+                        borderWidth: 1
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
+                        grace: '5%',
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280',
+                            font: {
+                                size: 11
+                            },
+                            maxTicksLimit: 6
                         },
                         grid: {
-                            color: document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6'
+                            color: document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6',
+                            lineWidth: 1
                         }
                     },
                     x: {
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280',
+                            font: {
+                                size: 11
+                            },
+                            maxRotation: 45,
+                            minRotation: 0
                         },
                         grid: {
-                            color: document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6'
+                            color: document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6',
+                            lineWidth: 1
                         }
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 4,
+                        hoverRadius: 6
+                    },
+                    line: {
+                        borderWidth: 3
                     }
                 }
             }
@@ -326,6 +383,35 @@ class Dashboard {
                 this.exportDashboardData();
             });
         }
+
+        // Window resize handler for charts
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (this.charts.issueChart) {
+                    this.charts.issueChart.resize();
+                }
+                if (this.charts.trendsChart) {
+                    this.charts.trendsChart.resize();
+                }
+            }, 250);
+        });
+
+        // Dark mode observer
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    // Re-render charts when dark mode changes to update colors
+                    setTimeout(() => this.renderCharts(), 100);
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
     }
 
     // Refresh dashboard
