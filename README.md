@@ -6,8 +6,7 @@ A comprehensive AI-powered Detailed Project Report (DPR) system for project mana
 
 ## 🚧 Live Demo
 
-- **Frontend**: [https://ai-dpr-system.vercel.app](https://ai-dpr-system.vercel.app)
-- **API**: [https://ai-dpr-system.vercel.app/api](https://ai-dpr-system.vercel.app/api)
+--Dashboard -- https://vocal-narwhal-d34048.netlify.app/
 
 ## 🚀 Features
 
