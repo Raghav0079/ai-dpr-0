@@ -20,7 +20,7 @@ const uploadRoutes = require('./routes/uploads');
 const healthRoutes = require('./routes/health');
 
 // Import services
-const dbService = require('./services/database');
+const dbService = require('./services/database-unified');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

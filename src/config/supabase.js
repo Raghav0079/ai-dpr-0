@@ -1,9 +1,13 @@
 const { createClient } = require('@supabase/supabase-js');
 
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL || 'https://csakacykllmrnecovpep.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzYWthY3lrbGxtcm5lY292cGVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMjYwMjYsImV4cCI6MjA3NDcwMjAyNn0._tMumOubOTiCBpjjuEvoGsYvAVcVq1qKzLWiK1xBx_E';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzYWthY3lrbGxtcm5lY292cGVwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTEyNjAyNiwiZXhwIjoyMDc0NzAyMDI2fQ.6TlaVWQzC1yUiE7DVp08GpHN9nvv1L64BeR8JpJdPsA';
+// Supabase configuration - DO NOT hardcode credentials in production
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
+  throw new Error('Missing required Supabase environment variables. Please check your .env file.');
+}
 
 // Create Supabase clients
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
