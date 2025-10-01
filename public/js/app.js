@@ -599,10 +599,27 @@ class App {
     }
 }
 
-// Initialize app when DOM is loaded
+// Initialize app when DOM is loaded with better error handling
 document.addEventListener('DOMContentLoaded', () => {
-    window.app = new App();
-    window.app.init();
+    console.log('DOM loaded, initializing app...');
+    
+    try {
+        // Ensure only one instance of app exists
+        if (window.app) {
+            console.log('App already exists, reinitializing...');
+            return;
+        }
+        
+        window.app = new App();
+        window.app.init();
+        
+        // Set a flag to prevent duplicate initialization
+        window.appInitialized = true;
+        
+    } catch (error) {
+        console.error('Failed to initialize main app:', error);
+        console.log('Falling back to debug navigation...');
+    }
 });
 
 // Handle page visibility changes
