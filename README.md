@@ -534,3 +534,5 @@ For support and questions:
 ---
 
 **Built with ❤️ using Node.js, Express, Supabase, and modern web technologies.**
+#   a i - d p r  
+ 
